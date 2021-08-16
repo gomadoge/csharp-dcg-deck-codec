@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\GomaDoge.DCG.DeckCodec\GomaDoge.DCG.DeckCodec.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.CommandLine" Version="2.0.0-beta1.21308.1" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net5.0</TargetFramework>
+    <TargetName>dcg-deck-codec</TargetName>
+    <AssemblyName>dcg-deck-codec</AssemblyName>
+    <Version>0.1.0</Version>
+  </PropertyGroup>
+
+</Project>
