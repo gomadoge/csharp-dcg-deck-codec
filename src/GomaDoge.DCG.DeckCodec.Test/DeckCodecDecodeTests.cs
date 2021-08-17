@@ -122,6 +122,15 @@ namespace GomaDoge.DCG.DeckCodec.Test
       Assert.AreEqual(expectedDeck, DeckCodec.Decode(encoded));
     }
 
+    [Test]
+    public void Decode_ChecksumDoesNotMatch([Values(0, 1, 2, 3)] int version)
+    {
+      (string encoded, _) = DecksEncoded.StarterDecks("ST1", version);
+      encoded = encoded[..4] + (char)(encoded[4] + 1) + encoded[5..];
+
+      Assert.Throws<DeckCodecException>(() => DeckCodec.Decode(encoded));
+    }
+
     // TODO: There are still many error cases that need to be tested.
   }
 }

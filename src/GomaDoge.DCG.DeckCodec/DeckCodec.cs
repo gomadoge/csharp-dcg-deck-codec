@@ -258,6 +258,11 @@ namespace GomaDoge.DCG.DeckCodec
       int cardSetBytes = deckCodecBytes.Length - deckCodecHeader.DeckNameBytes;
       byte checksum = ComputeChecksum(deckCodecBytes, cardSetBytes, 3);
 
+      if (checksum != deckCodecHeader.Checksum)
+      {
+        throw new DeckCodecException($"Calculated checksum '{checksum}' does not match the given checksum '{deckCodecHeader.Checksum}'.");
+      }
+
       int currentSet = 0;
 
       while (deckCodecStream.Position < cardSetBytes)
