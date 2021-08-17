@@ -80,7 +80,13 @@ namespace GomaDoge.DCG.DeckCodec
     ///     bit _ 2 3 4 5 6 7 8: Base36 encoded character
     ///   byte x+1:
     ///     bit 1 2 _ _ _ _ _ _: Card zero padding (stored zero-based)
-    ///     bit _ _ 3 4 5 6 7 8: Card count
+    ///     bit _ _ 3 _ _ _ _ _: Continue bit
+    ///     bit _ _ _ 4 5 6 7 8: Card count
+    ///   byte x+1-y: If the card count cannot be contained in bit 4-8, the continue bit is set (3rd bit).
+    ///               Use the next byte for the card count. Continue as long as the 1st bit is set.
+    ///     bit 1 _ _ _ _ _ _ _: Continue bit
+    ///     bit _ 2 3 4 5 6 7 8: Additional bits for card count.
+    ///                          Already parsed bits are less significant than these.
     /// end
     /// </summary>
     /// <param name="reader">The object used to read the deck codec bytes.</param>
@@ -109,7 +115,20 @@ namespace GomaDoge.DCG.DeckCodec
 
       byte paddingAndCardSetCount = reader.ReadByte();
       int zeroPadding = (paddingAndCardSetCount >> 6) + 1;
-      int cardCount = paddingAndCardSetCount & 0b_0011_1111;
+      int cardCount = paddingAndCardSetCount & 0b_0001_1111;
+      int currentShift = 5;
+
+      if (paddingAndCardSetCount.IsBitSet(2))
+      {
+        byte currentByte;
+
+        do
+        {
+          currentByte = reader.ReadByte();
+          cardCount = ((currentByte & 0b_0111_1111) << currentShift) | cardCount;
+          currentShift += 7;
+        } while (currentByte.IsBitSet(0));
+      }
 
       return new CardSetHeader(setName, zeroPadding, cardCount);
     }
