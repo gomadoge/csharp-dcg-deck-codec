@@ -132,7 +132,7 @@ namespace GomaDoge.DCG.DeckCodec
     ///   byte 2:
     ///     bit 1 2 3 _ _ _ _ _: Parallel ID
     ///     bit _ _ _ 4 5 6 7 8: Card number offset (card number = previous card number + offset)
-    ///   byte 3-x: If the card number cannot be contained in bit 6-8, the continue bit is set (1st bit).
+    ///   byte 3-x: If the card number cannot be contained in bit 4-8, the continue bit is set (1st bit).
     ///             Use the next byte for the card number. Continue as long as the 1st bit is set.
     ///     bit 1 _ _ _ _ _ _ _: Continue bit
     ///     bit _ 2 3 4 5 6 7 8: Additional bits for card number offset.
